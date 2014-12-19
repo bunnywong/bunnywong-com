@@ -1767,7 +1767,7 @@ body.cke_editable {
 
 /* -------------------------------------------------- */
 /* Responsive Youtube */
-.field-item {
+.iframe_parent {
     position: relative;
     padding-bottom: 56.25%; /* - 16:9 aspect ratio (most common) */
     /* padding-bottom: 62.5%; - 16:10 aspect ratio */
