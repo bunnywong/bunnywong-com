@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		<title>SWAP</title>		
+
+		<!-- jQuery Mobile: 0.3sec -->
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+			
+		<meta name="author" content="Bunny Wong"/>
+		<meta name="description" content="Online convert text to swap">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<!--[if IE]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<![endif]-->		
+		
+		<style>
+			#page{text-align:center;}
+			#header{height:45px;}
+				#header .new_file, #header .run{z-index:1; width:60px;}
+				#menu-button{width:30%; bottom:5px;}								
+			textarea.ui-input-text.ui-textinput-autogrow{height:180px!important; margin:0px auto 20px auto; }
+			
+			#footer .new_file, #footer .run{height:30px; z-index:1;}
+			#footer span{top:10px; position:relative;}
+			
+			.highlight{background-color:lightyellow!important;}
+		</style>
+	</head>
+	
+	<body>
+			<!--	==============================		H E A D E R		==============================	-->	
+		
+		<div data-role="page" id="page">
+			<div data-role="header" id="header">
+			
+				<a href="#" data-icon="home" class="header new_file"> &nbsp; N E W</a>					
+				
+				<select name="menu" id="menu" data-native-menu="false" tabindex="-1">
+				   <option value="swap_standard">S W A P</option>	
+<!--				   
+				   <option value="swap_line_brake">S W A P ( line brake )</option>						   
+-->				   
+				</select>
+				
+				<a href="#" data-icon="refresh" class="header run"  data-iconpos="right">R U N &nbsp;</a>
+				
+			</div><!-- header -->
+			
+			<!--	==============================		B O D Y		==============================	-->	
+			<div role="main" class="ui-content">
+				<textarea name="textarea" id="text_in" placeholder="Y o u r    t e x t"></textarea>
+				<textarea name="textarea" id="text_out" placeholder="R e s u l t"></textarea>
+			</div>
+			<!--	==============================		F O O T E R		==============================	-->	
+			
+			<div data-role="footer" data-position="fixed" data-theme="a" id="footer">		
+				<div data-role="navbar" >
+					<ul>
+						<li ><a href="#" data-icon="home" class="new_file ui-btn-active" data-iconpos="left" ><span>N E W</span></a></li>
+						<li ><a href="#" data-icon="refresh" class="run" data-iconpos="bottom"><span>R U N</span></a></li>				
+					</ul>
+				</div><!-- /navbar -->		
+			</div><!-- /footer -->
+
+		</div><!-- div: data-role="page" -->
+			
+		
+<script>
+	
+	//	----------------------------------------------------------------------------------------------------
+	
+	function text_reverse( str ){
+	
+		function refine_symbol( character ){
+		
+			var replace_character = [	['(', ')'],				
+								['¡]', '¡^'],					
+								['[', ']'],					
+								['<', '>'],					
+								['{', '}'],
+								['{', '}'],
+								['¡§', '¡¨']
+							];
+						
+			for( var i = 0; i < replace_character.length; i++ ){
+				if( character == replace_character[i][0] ){
+					character = replace_character[i][1];
+					console.log('Round: 1');
+					break;
+				}else if( character == replace_character[i][1] ){
+					character = replace_character[i][0];
+					console.log('Round: 2');
+					break;
+				}
+			}
+			
+			return character;
+			
+		}// !refine_symbol
+		
+		/*	Panel
+		--------------------	*/
+	
+		var j		= str.length - 1;
+		var result	= '';
+		
+		for( var i = 0; i < str.length; i++ ) {
+			result += refine_symbol( str.charAt(j) );
+			j--;
+		}		
+		
+		return result;
+		
+	}// !text_reverse()
+	
+	//	----------------------------------------------------------------------------------------------------
+	
+	function do_swap(){
+	
+		var user_text = $('#text_in').val();					// Get text
+		
+		if( user_text == '' ){	
+			focus_field('text_in');								// Redirect -> #text_in
+		}else{
+			$('#text_out').val( text_reverse(user_text) );		// Write text
+			focus_field('text_out');							// Redirect -> #text_out
+		}
+		
+	}// !do_swap()
+	
+	//	----------------------------------------------------------------------------------------------------
+	
+	function focus_field( action ){
+	
+		if( action == 'text_in' ){
+			$('#text_in').focus().addClass('highlight');	// addClass special for initial use only
+		}else{
+			$('#text_out').select();
+		}
+		
+	}// !focus_field()
+	
+	//	----------------------------------------------------------------------------------------------------
+
+	function setup(){
+		
+		// Initial focus
+		focus_field('text_in');
+		
+		// Click to swap
+		$('.run').click(function(){
+			do_swap();
+		});
+		
+		// Highlight background
+		$('#text_in, #text_out').focus(function(){
+			$(this).addClass('highlight');
+		}).focusout(function(){
+			$(this).removeClass('highlight');
+		});
+		
+		// Change mode
+		$('#menu').change(function(){
+			mode = $(this).val();
+		});
+		
+		// New file
+		$('.new_file').click(function(){			
+			$('#text_in, #text_out').val('');	// Clean data
+			focus_field('text_in');			
+		});
+		
+	}// !setup()
+		
+	//	----------------------------------------------------------------------------------------------------
+	
+	
+	//	----------------------------------------------------------------------------------------------------
+			
+	//	------------------------------------------------//
+	//						P A N E L					//
+	//	------------------------------------------------//
+	
+	var mode = 'swap_standard';			// Initial mode
+	
+	jQuery( document ).ready(function(){
+		
+		setup();
+	
+	});
+	
+	//	--------------------------------------------------
+	
+</script>
+	</body>
+</html>

@@ -1,0 +1,18 @@
+<script type="text/javascript" src="js/taketori.js" charset="UTF-8"></script>
+<script type="text/javascript">
+
+	//<![CDATA[
+	var taketori = (new Taketori()).set({fontFamily:'sans-serif'}).element('div.tategaki').toVertical();
+	taketori.document.element('toggle').addEventListener('click',function (e) {
+	 taketori.toggleAll();
+	 taketori.document.stopPropagation(e);
+	 taketori.document.preventDefault(e);
+	 return false;
+	});
+//]]>
+
+</script>
+
+<div class="tategaki">
+	this is text 這是文字
+</div>
